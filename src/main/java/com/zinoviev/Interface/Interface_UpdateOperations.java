@@ -2,7 +2,7 @@ package com.zinoviev.Interface;
 
 import com.zinoviev.Entity.Computer;
 
-public interface UpdateOperationsInterface {
+public interface Interface_UpdateOperations {
 
     void updateMotherboard(Computer computer, String motherboard);
 

@@ -2,7 +2,7 @@ package com.zinoviev.Interface;
 
 import com.zinoviev.Entity.Computer;
 
-public class PartialComputerUpdaterInterface implements UpdateOperationsInterface {
+public class Interface_PartialComputerUpdater implements Interface_UpdateOperations {
 
     @Override
     public void updateMotherboard(Computer computer, String motherboard) {
