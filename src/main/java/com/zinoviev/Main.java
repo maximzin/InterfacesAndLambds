@@ -10,6 +10,9 @@ import com.zinoviev.Interface.Interface_PartialComputerUpdater;
 import com.zinoviev.Interface.Interface_UpdateOperations;
 import com.zinoviev.StandartWayOOP.ComputerUpdaterStandart;
 
+import java.awt.datatransfer.StringSelection;
+import java.util.function.*;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -119,7 +122,7 @@ public class Main {
         funcInterf_computerUpdater.setMotherboardUpdater(new FuncInterf_MotherboardUpdater() {
             @Override
             public void updateMotherboard(Computer computer, String motherboard) {
-                System.out.println("Куплена материнская плата");
+                //System.out.println("Куплена материнская плата");
                 computer.setMotherboard(motherboard);
             }
         });
@@ -168,6 +171,53 @@ public class Main {
         // У лямбд нет состояния
         // то есть хранить переменную типа count++ НЕЛЬЗЯ
 
+        // 3)
+        // Лямбды не могут бросать проверяемые исключения, нужно оборачивать
+        // например
+        funcInterf_computerUpdaterLambda.setProcessorUpdater((computer, processor) -> {
+            try {
+                System.out.println("Обрабатываем на ошибки");
+                computer.setProcessor(processor);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        /////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////
+
+        // Системные функциональные интерфейсы
+        // Function<T, R> - принимаем тип T, возвращаем тип R
+        Function<String, String> subMyString = s -> s.substring(4);
+        //System.out.println(subMyString.apply("Hello, my name is Max!"));
+
+        // Predicate<T> - принимает аргумент типа Т и проверяет на true/false
+        Predicate<String> checkMyString = s -> s.isEmpty();
+        //System.out.println(checkMyString.test(""));
+
+        // Consumer<T> - принимает аргумент Т и не отдает ничего
+        Consumer<String> printMyString = s -> System.out.println(s);
+        //printMyString.accept("hey!");
+
+        // Supplier<T> - не принимает аргументов, но возвращает Т
+        Supplier<Double> getRandomNumber = () -> Math.random();
+        //System.out.println(getRandomNumber.get());
+
+        // UnaryOperator<T> - Принимает и отдает один и тот же тип Т
+        UnaryOperator<String> doUpperCase = s -> s.toUpperCase();
+        //System.out.println(doUpperCase.apply("hey"));
+
+        // BinaryOperator<T> - Принимает два аргумента одного типа Т, и отдает один
+        BinaryOperator<Integer> sumMyNumbers = (a, b) -> a + b;
+        //System.out.println(sumMyNumbers.apply(1, 5));
+
+        /////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////
+
+        // Ссылки на методы
+        // Всё просто, нужно использовать ::
+        Consumer<String> printPlease = System.out::println;
+        //printPlease.accept("Hi!");
 
     }
 }
