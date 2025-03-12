@@ -15,11 +15,11 @@ import com.zinoviev.StandartWayOOP.ComputerUpdaterStandart;
 public class Main {
     public static void main(String[] args) {
 
+        // Обычная схема по ООП
         // Наш изначальный компьютер
         Computer computer_1 = new Computer("AMD", "Intel", "AMD", 8, 1000);
         //System.out.println(computer_1);
 
-        // Обычная схема по ООП
         ComputerUpdaterStandart computerUpdaterStandart = new ComputerUpdaterStandart();
         computerUpdaterStandart.updateComputer(computer_1);
         //System.out.println(computer_1);
@@ -27,6 +27,7 @@ public class Main {
         /////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////
 
+        // Сделаем код более гибким, реализовав методы через интерфейсы
         // Сейчас будут всратые названия, но надо как-то придать отличия разным секторам
         // Создали интерфейс Interface_UpdateOperations, где описали все операции
         // Далее создали класс Interface_DefaultComputerUpdater, который реализует все замены
@@ -53,7 +54,8 @@ public class Main {
         /////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////
 
-        // Теперь допустим, что нас попросили временно изменить логику (на лету)
+        // Сделаем то же через анонимный класс
+        // Допустим, что нас попросили временно изменить логику (на лету)
         // Нужно менять только материнку
         // для этого поработаем с анонимными классами
         Computer computer_3 = new Computer("INTEL", "Intel", "4060", 8, 1000);
@@ -104,11 +106,14 @@ public class Main {
         // один абстрактный метод
         // хотя могут присутствовать static и default методы
         // Создали функциональные интерфейсы в папке FuncInterface
+        // Их прикол в том, что они содержат ТОЛЬКО ОДИН абстрактный метод (хотя могут лежать default + static методы)
+        // Соответственно они сразу указывают на то, что они могут переопределяться
+        // пользователем через лямбда выражения (они будут далее)
         // Переписали класс ComputerUpdater, теперь мы можем прямо здесь
         // переопределять поведение каждого метода:
 
         Computer computer_4 = new Computer("INTEL", "Intel", "4060", 8, 1000);
-        System.out.println(computer_4);
+        //System.out.println(computer_4);
 
         FuncInterf_ComputerUpdater funcInterf_computerUpdater = new FuncInterf_ComputerUpdater();
         funcInterf_computerUpdater.setMotherboardUpdater(new FuncInterf_MotherboardUpdater() {
@@ -121,19 +126,47 @@ public class Main {
 
         // Мы присвоили только один интерфейс, соответственно будет поменяна только материнка
         funcInterf_computerUpdater.update(computer_4);
-        System.out.println(computer_4);
+        //System.out.println(computer_4);
 
         /////////////////////////////////////////////////////////////////////////////
         /////////////////////////////////////////////////////////////////////////////
 
+        // Настало время ЛЯМБДА выражений
+        Computer computer_5 = new Computer("INTEL", "Intel", "4060", 8, 1000);
+        //System.out.println(computer_5.toString());
 
+        FuncInterf_ComputerUpdater funcInterf_computerUpdaterLambda = new FuncInterf_ComputerUpdater();
+        // Переопределим какой-нибудь метод в интерфейса
+        // Например поменяем логику замены процессора
+        funcInterf_computerUpdaterLambda.setProcessorUpdater((computer, processor) -> {
+            //System.out.println("Наносим дополнительно термопасту");
+            computer.setProcessor(processor);
+        });
 
+        funcInterf_computerUpdaterLambda.update(computer_5);
+        //System.out.println(computer_5);
 
+        // Важно помнить, что при таком переопределении методом
+        // они не выполняются сразу, мы просто задаем их поведение
+        // вызываться они будут В НАШЕМ СЛУЧАЕ только через метод update(computer)
 
+        /////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////
 
+        // Важное уточнение по лямбдам
+        // 1)
+        // такой пример:
+        String newMotherboard = "Intel";
+        funcInterf_computerUpdaterLambda.setMotherboardUpdater((computer, motherboard1) -> {
+            computer.setMotherboard(newMotherboard);
+        });
+        // Если после объявления лямбды мы изменяем переменную newMotherboard,
+        // то получаем ошибку, так как такие переменные должны быть либо final,
+        // либо effectively final (не изменяются после объявления)
 
-
-
+        // 2)
+        // У лямбд нет состояния
+        // то есть хранить переменную типа count++ НЕЛЬЗЯ
 
 
     }
